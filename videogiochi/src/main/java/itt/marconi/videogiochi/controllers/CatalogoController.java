@@ -35,7 +35,7 @@ public class CatalogoController {
             .addObject("videogiochi", videogiocoService.findAll());
     }
 
-    // 🆕 Form nuovo videogioco
+    // Form nuovo videogioco
     @GetMapping("/new")
     public ModelAndView newVideogiocoForm() {
         return new ModelAndView("videogioco-form")
@@ -60,7 +60,7 @@ public class CatalogoController {
         return new ModelAndView("redirect:/videogioco?id=" + v.getId());
     }
 
-    // 🔍 Dettaglio videogioco (PRG pattern)
+    // Dettaglio videogioco (PRG pattern)
     @GetMapping(path = "videogioco", params = "id")
     public ModelAndView showVideogioco(@RequestParam("id") UUID videogiocoId) {
 
@@ -75,7 +75,7 @@ public class CatalogoController {
         }
     }
 
-    // 🗑️ Eliminazione
+    // Eliminazione
     @GetMapping("videogioco/delete/{id}")
     public ModelAndView deleteVideogioco(
         @PathVariable("id") UUID videogiocoId,
