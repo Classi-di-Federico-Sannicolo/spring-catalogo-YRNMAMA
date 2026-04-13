@@ -1,4 +1,4 @@
-package it.marconi.videogiochi.domain;
+package itt.marconi.videogiochi.domain;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;

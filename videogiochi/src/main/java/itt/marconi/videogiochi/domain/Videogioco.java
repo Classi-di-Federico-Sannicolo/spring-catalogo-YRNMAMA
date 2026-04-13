@@ -1,4 +1,4 @@
-package itt.marconi.videogiochi.Domain;
+package itt.marconi.videogiochi.domain;
 
 import java.util.UUID;
 

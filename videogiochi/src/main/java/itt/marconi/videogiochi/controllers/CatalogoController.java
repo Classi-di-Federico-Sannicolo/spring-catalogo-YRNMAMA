@@ -28,7 +28,7 @@ public class CatalogoController {
     @Autowired
     private VideogiocoService videogiocoService;
 
-    // 📋 Lista videogiochi
+    // Lista videogiochi
     @GetMapping
     public ModelAndView showVideogiochiList() {
         return new ModelAndView("videogioco-list")
@@ -42,7 +42,7 @@ public class CatalogoController {
             .addObject(new VideogiocoForm());
     }
 
-    // 💾 Salvataggio videogioco
+    // Salvataggio videogioco
     @PostMapping("/new")
     public ModelAndView handleNewVideogioco(
         @ModelAttribute @Valid VideogiocoForm videogiocoForm,
