@@ -59,15 +59,50 @@ public class CatalogoController {
 
     @GetMapping("/item/{id}")
     public ModelAndView showVideogioco(
-        @PathVariable("id") UUID videogiocoId,
-        @ModelAttribute("created") Boolean created
+        @PathVariable("id") UUID videogiocoId
     ) {
 
         return videogiocoService.get(videogiocoId)
             .map(v -> new ModelAndView("videogioco-detail")
-                .addObject("videogioco", v)
-                .addObject("created", created))
+                .addObject("videogioco", v))
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Videogioco non trovato"));
+    }
+
+    @GetMapping("/item/edit/{id}")
+    public ModelAndView editVideogiocoForm(@PathVariable("id") UUID videogiocoId) {
+        return videogiocoService.get(videogiocoId)
+            .map(v -> {
+                VideogiocoForm form = new VideogiocoForm();
+                form.setTitolo(v.getTitolo());
+                form.setProduttore(v.getProduttore());
+                form.setGenere(v.getGenere());
+                form.setAnno(v.getAnno());
+                return new ModelAndView("videogioco-form")
+                    .addObject("videogiocoForm", form)
+                    .addObject("editing", true)
+                    .addObject("videogiocoId", v.getId());
+            })
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Videogioco non trovato"));
+    }
+
+    @PostMapping("/item/edit/{id}")
+    public ModelAndView handleEditVideogioco(
+        @PathVariable("id") UUID videogiocoId,
+        @ModelAttribute @Valid VideogiocoForm videogiocoForm,
+        BindingResult br,
+        RedirectAttributes attr
+    ) {
+
+        if (br.hasErrors()) {
+            return new ModelAndView("videogioco-form")
+                .addObject("editing", true)
+                .addObject("videogiocoId", videogiocoId);
+        }
+
+        videogiocoService.update(videogiocoId, videogiocoForm);
+        attr.addFlashAttribute("updated", true);
+
+        return new ModelAndView("redirect:/item/" + videogiocoId);
     }
 
     @GetMapping("/item/delete/{id}")
