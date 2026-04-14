@@ -2,6 +2,8 @@ package itt.marconi.videogiochi.domain;
 
 import java.util.UUID;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,24 +15,28 @@ import lombok.NoArgsConstructor;
 
 // la classe Videogioco serve a specificare la struttura dell'entità da salvare nel database
 
-@Data                   // getter e setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "videogiochi") 
+@Table(name = "videogiochi")
 public class Videogioco {
-    
-    @Id                 // primary key
-    @GeneratedValue     // generazione automatica
-    @Column(name = "id")
+
+    @Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "id", nullable = false, updatable = false)
     private UUID id;
 
-    @Column(name = "titolo")
+    @Column(name = "titolo", nullable = false)
     private String titolo;
 
-    @Column(name = "genere")
+    @Column(name = "produttore", nullable = false)
+    private String produttore;
+
+    @Column(name = "genere", nullable = false)
     private String genere;
 
-    @Column(name = "anno")
+    @Column(name = "anno", nullable = false)
     private Integer anno;
-}
+} 

@@ -1,6 +1,5 @@
 package itt.marconi.videogiochi.controllers;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,21 +27,19 @@ public class CatalogoController {
     @Autowired
     private VideogiocoService videogiocoService;
 
-    // Lista videogiochi
-    @GetMapping
-    public ModelAndView showVideogiochiList() {
+    @GetMapping("/")
+    public ModelAndView showVideogiochiList(@RequestParam(name = "search", required = false) String search) {
         return new ModelAndView("videogioco-list")
-            .addObject("videogiochi", videogiocoService.findAll());
+            .addObject("videogiochi", videogiocoService.findAll(search))
+            .addObject("search", search);
     }
 
-    // Form nuovo videogioco
     @GetMapping("/new")
     public ModelAndView newVideogiocoForm() {
         return new ModelAndView("videogioco-form")
-            .addObject(new VideogiocoForm());
+            .addObject("videogiocoForm", new VideogiocoForm());
     }
 
-    // Salvataggio videogioco
     @PostMapping("/new")
     public ModelAndView handleNewVideogioco(
         @ModelAttribute @Valid VideogiocoForm videogiocoForm,
@@ -50,41 +47,44 @@ public class CatalogoController {
         RedirectAttributes attr
     ) {
 
-        if (br.hasErrors())
+        if (br.hasErrors()) {
             return new ModelAndView("videogioco-form");
+        }
 
         Videogioco v = videogiocoService.save(videogiocoForm);
+        attr.addFlashAttribute("created", true);
 
-        attr.addFlashAttribute("newVideogioco", true);
-
-        return new ModelAndView("redirect:/videogioco?id=" + v.getId());
+        return new ModelAndView("redirect:/item/" + v.getId());
     }
 
-    // Dettaglio videogioco (PRG pattern)
-    @GetMapping(path = "videogioco", params = "id")
-    public ModelAndView showVideogioco(@RequestParam("id") UUID videogiocoId) {
+    @GetMapping("/item/{id}")
+    public ModelAndView showVideogioco(
+        @PathVariable("id") UUID videogiocoId,
+        @ModelAttribute("created") Boolean created
+    ) {
 
-        Optional<Videogioco> opVideogioco = videogiocoService.get(videogiocoId);
-
-        if (opVideogioco.isPresent()) {
-            return new ModelAndView("videogioco-detail")
-                .addObject("videogioco", opVideogioco.get());
-        }
-        else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Videogioco non trovato");
-        }
+        return videogiocoService.get(videogiocoId)
+            .map(v -> new ModelAndView("videogioco-detail")
+                .addObject("videogioco", v)
+                .addObject("created", created))
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Videogioco non trovato"));
     }
 
-    // Eliminazione
-    @GetMapping("videogioco/delete/{id}")
+    @GetMapping("/item/delete/{id}")
     public ModelAndView deleteVideogioco(
         @PathVariable("id") UUID videogiocoId,
         RedirectAttributes attr
     ) {
 
         videogiocoService.deleteById(videogiocoId);
-
         attr.addFlashAttribute("deleted", true);
+        return new ModelAndView("redirect:/");
+    }
+
+    @GetMapping("/clear")
+    public ModelAndView clearCatalogo(RedirectAttributes attr) {
+        videogiocoService.deleteAll();
+        attr.addFlashAttribute("cleared", true);
         return new ModelAndView("redirect:/");
     }
 }

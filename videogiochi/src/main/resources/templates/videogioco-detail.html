@@ -2,19 +2,35 @@
 <html xmlns="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}">
     <title>Dettaglio Videogioco</title>
 </head>
 <body>
 
-<div class="container mt-4">
+<div class="container mt-4" style="max-width: 720px;">
 
-    <h1 th:text="${videogioco.titolo}"></h1>
+    <a th:href="@{/}" class="btn btn-outline-secondary mb-4">Torna al catalogo</a>
 
-    <p><b>Genere:</b> <span th:text="${videogioco.genere}"></span></p>
-    <p><b>Anno:</b> <span th:text="${videogioco.anno}"></span></p>
+    <div th:if="${created}" class="alert alert-success">Videogioco inserito correttamente.</div>
 
-    <a th:href="@{/}" class="btn btn-primary">Indietro</a>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h2 class="card-title" th:text="${videogioco.titolo}"></h2>
+            <dl class="row mt-3">
+                <dt class="col-sm-4">Codice</dt>
+                <dd class="col-sm-8" th:text="${videogioco.id}"></dd>
 
+                <dt class="col-sm-4">Produttore</dt>
+                <dd class="col-sm-8" th:text="${videogioco.produttore}"></dd>
+
+                <dt class="col-sm-4">Genere</dt>
+                <dd class="col-sm-8" th:text="${videogioco.genere}"></dd>
+
+                <dt class="col-sm-4">Anno</dt>
+                <dd class="col-sm-8" th:text="${videogioco.anno}"></dd>
+            </dl>
+        </div>
+    </div>
 </div>
 
 </body>

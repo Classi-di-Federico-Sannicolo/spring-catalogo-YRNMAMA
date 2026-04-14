@@ -7,49 +7,60 @@
 </head>
 <body>
 
-<div class="container" style="margin-top:50px;">
+<div class="container" style="max-width: 720px; margin-top:50px;">
 
-    <a th:href="@{/}" class="btn btn-primary">Home</a>
+    <a th:href="@{/}" class="btn btn-outline-primary mb-4">Torna al catalogo</a>
 
-    <div class="mb-3 text-end">
-        <a th:href="@{/new(lang='it')}">IT</a> | 
-        <a th:href="@{/new(lang='en')}">EN</a>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h2 class="card-title mb-4">Aggiungi un nuovo videogioco</h2>
+
+            <form method="post" th:action="@{/new}" th:object="${videogiocoForm}">
+
+                <div class="mb-3">
+                    <label class="form-label">Titolo</label>
+                    <input th:field="*{titolo}" type="text" class="form-control" placeholder="Titolo del videogioco">
+                    <div th:if="${#fields.hasErrors('titolo')}">
+                        <span th:errors="*{titolo}" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Produttore</label>
+                    <input th:field="*{produttore}" type="text" class="form-control" placeholder="Produttore o autore">
+                    <div th:if="${#fields.hasErrors('produttore')}">
+                        <span th:errors="*{produttore}" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Genere</label>
+                    <select th:field="*{genere}" class="form-select">
+                        <option value="" disabled selected>Seleziona una categoria</option>
+                        <option value="Azione">Azione</option>
+                        <option value="Avventura">Avventura</option>
+                        <option value="Sport">Sport</option>
+                        <option value="Simulazione">Simulazione</option>
+                        <option value="Puzzle">Puzzle</option>
+                        <option value="RPG">RPG</option>
+                    </select>
+                    <div th:if="${#fields.hasErrors('genere')}">
+                        <span th:errors="*{genere}" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Anno</label>
+                    <input th:field="*{anno}" type="number" min="1950" max="2100" class="form-control" placeholder="Anno di pubblicazione">
+                    <div th:if="${#fields.hasErrors('anno')}">
+                        <span th:errors="*{anno}" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <button class="btn btn-success">Salva videogioco</button>
+            </form>
+        </div>
     </div>
-
-    <h2 class="text-center" th:text="#{videogioco.new.title}"></h2>
-
-    <form method="post" th:action="@{/new}" th:object="${videogiocoForm}">
-
-        <div class="mb-3">
-            <label th:text="#{videogioco.titolo}"></label>
-            <input th:field="*{titolo}" type="text" class="form-control">
-
-            <div th:if="${#fields.hasErrors('titolo')}">
-                <span th:errors="*{titolo}" class="text-danger"></span>
-            </div>
-        </div>
-
-        <div class="mb-3">
-            <label th:text="#{videogioco.genere}"></label>
-            <input th:field="*{genere}" type="text" class="form-control">
-
-            <div th:if="${#fields.hasErrors('genere')}">
-                <span th:errors="*{genere}" class="text-danger"></span>
-            </div>
-        </div>
-
-        <div class="mb-3">
-            <label th:text="#{videogioco.anno}"></label>
-            <input th:field="*{anno}" type="number" class="form-control">
-
-            <div th:if="${#fields.hasErrors('anno')}">
-                <span th:errors="*{anno}" class="text-danger"></span>
-            </div>
-        </div>
-
-        <button class="btn btn-success" th:text="#{videogioco.save}"></button>
-
-    </form>
 </div>
 
 </body>

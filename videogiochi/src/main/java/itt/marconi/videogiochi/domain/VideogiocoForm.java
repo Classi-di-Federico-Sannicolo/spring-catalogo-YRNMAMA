@@ -1,5 +1,6 @@
 package itt.marconi.videogiochi.domain;
 
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -24,10 +25,15 @@ public class VideogiocoForm {
     private String titolo;
 
     @NotEmpty
+    @Size(max = 50)
+    private String produttore;
+
+    @NotEmpty
     @Size(max = 30)
     private String genere;
 
     @NotNull
     @Min(1950)
+    @Max(2100)
     private Integer anno;
-}
+} 

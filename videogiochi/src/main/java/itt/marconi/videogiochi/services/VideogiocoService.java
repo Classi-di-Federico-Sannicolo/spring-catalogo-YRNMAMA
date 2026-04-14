@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import itt.marconi.videogiochi.domain.Videogioco;
@@ -19,23 +20,24 @@ public class VideogiocoService {
     private VideogiocoRepository videogiocoRepo;
 
     public Videogioco save(VideogiocoForm videogiocoForm) {
-
         Videogioco v = mapVideogioco(videogiocoForm);
         return videogiocoRepo.save(v);
     }
 
     private Videogioco mapVideogioco(VideogiocoForm form) {
-
         Videogioco v = new Videogioco();
         v.setTitolo(form.getTitolo());
+        v.setProduttore(form.getProduttore());
         v.setGenere(form.getGenere());
         v.setAnno(form.getAnno());
-        
         return v;
     }
 
-    public List<Videogioco> findAll() {
-        return videogiocoRepo.findAll();
+    public List<Videogioco> findAll(String search) {
+        if (search == null || search.isBlank()) {
+            return videogiocoRepo.findAll(Sort.by("titolo"));
+        }
+        return videogiocoRepo.findByTitoloContainingIgnoreCase(search);
     }
 
     public Optional<Videogioco> get(UUID id) {
@@ -45,4 +47,8 @@ public class VideogiocoService {
     public void deleteById(UUID id) {
         videogiocoRepo.deleteById(id);
     }
-}
+
+    public void deleteAll() {
+        videogiocoRepo.deleteAll();
+    }
+} 

@@ -9,38 +9,63 @@
 
 <div class="container mt-4">
 
-    <h1>Catalogo Videogiochi</h1>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1>Catalogo Videogiochi</h1>
+            <p class="text-muted mb-0" th:if="${search}">Risultati per: <strong th:text="${search}"></strong></p>
+        </div>
+        <div class="btn-group">
+            <a th:href="@{/new}" class="btn btn-primary">Aggiungi nuovo elemento</a>
+            <a th:href="@{/clear}" class="btn btn-outline-danger" onclick="return confirm('Sicuro di svuotare il catalogo?')">Svuota catalogo</a>
+        </div>
+    </div>
 
-    <a th:href="@{/new}" class="btn btn-primary mb-3">Nuovo Videogioco</a>
+    <div th:if="${created}" class="alert alert-success">Videogioco inserito con successo.</div>
+    <div th:if="${deleted}" class="alert alert-warning">Videogioco eliminato dal catalogo.</div>
+    <div th:if="${cleared}" class="alert alert-danger">Catalogo svuotato.</div>
 
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Titolo</th>
-                <th>Genere</th>
-                <th>Anno</th>
-                <th>Azioni</th>
-            </tr>
-        </thead>
+    <form th:action="@{/}" method="get" class="row g-2 mb-4 align-items-end">
+        <div class="col-sm-8">
+            <label for="search" class="form-label">Cerca per titolo</label>
+            <input id="search" name="search" type="search" class="form-control" th:value="${search}" placeholder="Cerca nel catalogo...">
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-secondary">Cerca</button>
+            <a th:href="@{/}" class="btn btn-outline-secondary">Mostra tutto</a>
+        </div>
+    </form>
 
-        <tbody>
-            <tr th:each="v : ${videogiochi}">
-                <td th:text="${v.titolo}"></td>
-                <td th:text="${v.genere}"></td>
-                <td th:text="${v.anno}"></td>
+    <div th:if="${#lists.isEmpty(videogiochi)}">
+        <div class="alert alert-info">Il catalogo è vuoto. Usa il pulsante "Aggiungi nuovo elemento" per inserire un videogioco.</div>
+    </div>
 
-                <td>
-                    <a th:href="@{'/videogioco?id='+${v.id}}" class="btn btn-info">Dettagli</a>
-                    <a th:href="@{'/videogioco/delete/'+${v.id}}" class="btn btn-danger">Elimina</a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-
-    <p th:if="${#lists.isEmpty(videogiochi)}">
-        Nessun videogioco presente
-    </p>
-
+    <div th:unless="${#lists.isEmpty(videogiochi)}" class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Codice</th>
+                    <th>Titolo</th>
+                    <th>Produttore</th>
+                    <th>Genere</th>
+                    <th>Anno</th>
+                    <th>Azioni</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="v : ${videogiochi}">
+                    <td><a th:href="@{'/item/' + ${v.id}}" th:text="${v.id}"></a></td>
+                    <td th:text="${v.titolo}"></td>
+                    <td th:text="${v.produttore}"></td>
+                    <td th:text="${v.genere}"></td>
+                    <td th:text="${v.anno}"></td>
+                    <td>
+                        <a th:href="@{'/item/' + ${v.id}}" class="btn btn-sm btn-info">Dettaglio</a>
+                        <a th:href="@{'/item/delete/' + ${v.id}}" class="btn btn-sm btn-danger" onclick="return confirm('Eliminare questo elemento?')">Elimina</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 </body>
