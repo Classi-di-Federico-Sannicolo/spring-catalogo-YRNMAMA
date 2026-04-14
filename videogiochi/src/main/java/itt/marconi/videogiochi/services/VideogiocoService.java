@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import itt.marconi.videogiochi.domain.Videogioco;
 import itt.marconi.videogiochi.domain.VideogiocoForm;
-import repositories.VideogiocoRepository;
+import itt.marconi.videogiochi.repositories.VideogiocoRepository;
 
 @Service
 public class VideogiocoService {

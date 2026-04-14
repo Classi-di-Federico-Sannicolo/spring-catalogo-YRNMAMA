@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}">
+    
+    <title>Errore 400</title>
+</head>
+<body>
+
+<div class="container d-flex flex-column justify-content-center align-items-center" style="height: 100vh;">
+
+    <div class="text-center">
+
+        <h1 class="text-danger">400</h1>
+        <h2 class="mb-3">Richiesta non valida</h2>
+
+        <p class="text-muted">
+            La richiesta inviata non è corretta oppure mancano dei parametri.
+        </p>
+
+        <p class="text-muted">
+            Controlla l'URL oppure torna alla home.
+        </p>
+
+        <a th:href="@{/}" class="btn btn-primary mt-3">
+            Torna alla Home
+        </a>
+
+    </div>
+
+</div>
+
+<script th:src="@{/webjars/bootstrap/5.3.3/js/bootstrap.bundle.min.js}"></script>
+
+</body>
+</html>

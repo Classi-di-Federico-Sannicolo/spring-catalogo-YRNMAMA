@@ -11,12 +11,17 @@
 
     <a th:href="@{/}" class="btn btn-primary">Home</a>
 
-    <h2 class="text-center">Nuovo Videogioco</h2>
+    <div class="mb-3 text-end">
+        <a th:href="@{/new(lang='it')}">IT</a> | 
+        <a th:href="@{/new(lang='en')}">EN</a>
+    </div>
+
+    <h2 class="text-center" th:text="#{videogioco.new.title}"></h2>
 
     <form method="post" th:action="@{/new}" th:object="${videogiocoForm}">
 
         <div class="mb-3">
-            <label>Titolo</label>
+            <label th:text="#{videogioco.titolo}"></label>
             <input th:field="*{titolo}" type="text" class="form-control">
 
             <div th:if="${#fields.hasErrors('titolo')}">
@@ -25,7 +30,7 @@
         </div>
 
         <div class="mb-3">
-            <label>Genere</label>
+            <label th:text="#{videogioco.genere}"></label>
             <input th:field="*{genere}" type="text" class="form-control">
 
             <div th:if="${#fields.hasErrors('genere')}">
@@ -34,7 +39,7 @@
         </div>
 
         <div class="mb-3">
-            <label>Anno</label>
+            <label th:text="#{videogioco.anno}"></label>
             <input th:field="*{anno}" type="number" class="form-control">
 
             <div th:if="${#fields.hasErrors('anno')}">
@@ -42,7 +47,7 @@
             </div>
         </div>
 
-        <button class="btn btn-success">Salva</button>
+        <button class="btn btn-success" th:text="#{videogioco.save}"></button>
 
     </form>
 </div>
