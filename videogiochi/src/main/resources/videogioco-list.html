@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}">
+    <title>Catalogo Videogiochi</title>
+</head>
+<body>
+
+<div class="container mt-4">
+
+    <h1>Catalogo Videogiochi</h1>
+
+    <a th:href="@{/new}" class="btn btn-primary mb-3">Nuovo Videogioco</a>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Titolo</th>
+                <th>Genere</th>
+                <th>Anno</th>
+                <th>Azioni</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr th:each="v : ${videogiochi}">
+                <td th:text="${v.titolo}"></td>
+                <td th:text="${v.genere}"></td>
+                <td th:text="${v.anno}"></td>
+
+                <td>
+                    <a th:href="@{'/videogioco?id='+${v.id}}" class="btn btn-info">Dettagli</a>
+                    <a th:href="@{'/videogioco/delete/'+${v.id}}" class="btn btn-danger">Elimina</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p th:if="${#lists.isEmpty(videogiochi)}">
+        Nessun videogioco presente
+    </p>
+
+</div>
+
+</body>
+</html>

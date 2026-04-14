@@ -9,9 +9,8 @@ import org.springframework.stereotype.Service;
 
 import itt.marconi.videogiochi.domain.Videogioco;
 import itt.marconi.videogiochi.domain.VideogiocoForm;
-import itt.marconi.videogiochi.repositories.VideogiocoRepository;
-// un service si interfaccia tra Controller e Repository
-// sceglie come e quali dati leggere, salvare, eliminare...
+import repositories.VideogiocoRepository;
+
 @Service
 public class VideogiocoService {
     

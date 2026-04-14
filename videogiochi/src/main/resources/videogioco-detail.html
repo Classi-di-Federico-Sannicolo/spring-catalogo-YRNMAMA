@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dettaglio Videogioco</title>
+</head>
+<body>
+
+<div class="container mt-4">
+
+    <h1 th:text="${videogioco.titolo}"></h1>
+
+    <p><b>Genere:</b> <span th:text="${videogioco.genere}"></span></p>
+    <p><b>Anno:</b> <span th:text="${videogioco.anno}"></span></p>
+
+    <a th:href="@{/}" class="btn btn-primary">Indietro</a>
+
+</div>
+
+</body>
+</html>
