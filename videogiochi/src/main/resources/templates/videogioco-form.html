@@ -3,62 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}">
-    <title>Nuovo Videogioco</title>
+    <title th:text="${editing} ? 'Modifica Videogioco' : 'Nuovo Videogioco'"></title>
 </head>
 <body>
 
 <div class="container" style="max-width: 720px; margin-top:50px;">
 
-    <a th:href="@{/}" class="btn btn-outline-primary mb-4">Torna al catalogo</a>
+    <a th:href="@{/}" class="btn btn-outline-primary mb-4">
+        ← Torna al catalogo
+    </a>
 
     <div class="card shadow-sm">
         <div class="card-body">
-            <h2 class="card-title mb-4">Aggiungi un nuovo videogioco</h2>
 
-            <form method="post" th:action="@{/new}" th:object="${videogiocoForm}">
+            <h2 class="mb-4"
+                th:text="${editing} ? 'Modifica Videogioco' : 'Aggiungi Videogioco'">
+            </h2>
 
+            <!-- FORM -->
+            <form method="post"
+                  th:action="${editing} ? @{'/item/edit/' + ${videogiocoId}} : @{/new}"
+                  th:object="${videogiocoForm}">
+
+                <!-- TITOLO -->
                 <div class="mb-3">
                     <label class="form-label">Titolo</label>
-                    <input th:field="*{titolo}" type="text" class="form-control" placeholder="Titolo del videogioco">
-                    <div th:if="${#fields.hasErrors('titolo')}">
-                        <span th:errors="*{titolo}" class="text-danger"></span>
+                    <input th:field="*{titolo}" type="text" class="form-control">
+                    <div th:if="${#fields.hasErrors('titolo')}" class="text-danger">
+                        <span th:errors="*{titolo}"></span>
                     </div>
                 </div>
 
+                <!-- PRODUTTORE -->
                 <div class="mb-3">
                     <label class="form-label">Produttore</label>
-                    <input th:field="*{produttore}" type="text" class="form-control" placeholder="Produttore o autore">
-                    <div th:if="${#fields.hasErrors('produttore')}">
-                        <span th:errors="*{produttore}" class="text-danger"></span>
+                    <input th:field="*{produttore}" type="text" class="form-control">
+                    <div th:if="${#fields.hasErrors('produttore')}" class="text-danger">
+                        <span th:errors="*{produttore}"></span>
                     </div>
                 </div>
 
+                <!-- GENERE -->
                 <div class="mb-3">
                     <label class="form-label">Genere</label>
                     <select th:field="*{genere}" class="form-select">
-                        <option value="" disabled selected>Seleziona una categoria</option>
+                        <option value="">Seleziona</option>
                         <option value="Azione">Azione</option>
                         <option value="Avventura">Avventura</option>
-                        <option value="Sport">Sport</option>
-                        <option value="Simulazione">Simulazione</option>
-                        <option value="Puzzle">Puzzle</option>
                         <option value="RPG">RPG</option>
+                        <option value="Sport">Sport</option>
+                        <option value="Puzzle">Puzzle</option>
+                        <option value="Simulazione">Simulazione</option>
                     </select>
-                    <div th:if="${#fields.hasErrors('genere')}">
-                        <span th:errors="*{genere}" class="text-danger"></span>
+                    <div th:if="${#fields.hasErrors('genere')}" class="text-danger">
+                        <span th:errors="*{genere}"></span>
                     </div>
                 </div>
 
+                <!-- ANNO -->
                 <div class="mb-3">
                     <label class="form-label">Anno</label>
-                    <input th:field="*{anno}" type="number" min="1950" max="2100" class="form-control" placeholder="Anno di pubblicazione">
-                    <div th:if="${#fields.hasErrors('anno')}">
-                        <span th:errors="*{anno}" class="text-danger"></span>
+                    <input th:field="*{anno}" type="number" class="form-control">
+                    <div th:if="${#fields.hasErrors('anno')}" class="text-danger">
+                        <span th:errors="*{anno}"></span>
                     </div>
                 </div>
 
-                <button class="btn btn-success">Salva videogioco</button>
+                <!-- BUTTON -->
+                <button class="btn btn-success w-100">
+                    <span th:text="${editing} ? 'Aggiorna' : 'Salva'"></span>
+                </button>
+
             </form>
+
         </div>
     </div>
 </div>
