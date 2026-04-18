@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import itt.marconi.videogiochi.domain.Videogioco;
 import itt.marconi.videogiochi.domain.VideogiocoForm;
+import itt.marconi.videogiochi.domain.RawgGame;
+import itt.marconi.videogiochi.domain.RawgResponse;
 import itt.marconi.videogiochi.services.VideogiocoService;
 
 @RestController
@@ -26,13 +28,34 @@ public class VideogiocoRestController {
     @Autowired
     private VideogiocoService service;
 
-    // API RAWG
+    // ======= API RAWG (Videogiochi Reali) =======
+    
+    // Ricerca videogiochi su RAWG API
     @GetMapping("/api/giochi")
-    public String getGiochi() {
-        return service.getGiochi();
+    public ResponseEntity<RawgResponse> searchGiochi(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) Integer page) {
+        try {
+            RawgResponse response = service.searchGames(search, page != null ? page : 1);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
-    // CRUD CATALOGO LOCALE
+    // Ottieni tutti i videogiochi con paginazione
+    @GetMapping("/api/giochi/tutti")
+    public ResponseEntity<List<RawgGame>> getTuttiGiochi(
+            @RequestParam(required = false, defaultValue = "1") Integer page) {
+        try {
+            List<RawgGame> games = service.getAllGames(page);
+            return ResponseEntity.ok(games);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    // ======= CRUD CATALOGO LOCALE =======
 
     // CREATE - Crea nuovo videogioco
     @PostMapping("/api/catalogo")

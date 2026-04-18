@@ -5,12 +5,16 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import itt.marconi.videogiochi.domain.Videogioco;
 import itt.marconi.videogiochi.domain.VideogiocoForm;
+import itt.marconi.videogiochi.domain.RawgGame;
+import itt.marconi.videogiochi.domain.RawgResponse;
 import itt.marconi.videogiochi.repositories.VideogiocoRepository;
 
 @Service
@@ -23,7 +27,11 @@ public class VideogiocoService {
     @Autowired
     private RestTemplate restTemplate;
 
-    private final String API_KEY = "a6f4e59c446e4fb4bde9090dbe9bdc51";
+    @Value("${rawg.api.key}")
+    private String apiKey;
+
+    @Value("${rawg.api.base-url}")
+    private String baseUrl;
 
     public Videogioco save(VideogiocoForm videogiocoForm) {
         Videogioco v = mapVideogioco(videogiocoForm);
@@ -58,11 +66,39 @@ public class VideogiocoService {
         videogiocoRepo.deleteAll();
     }
 
-    public String getGiochi() {
+    public RawgResponse searchGames(String search, Integer page) {
+        try {
+            StringBuilder url = new StringBuilder(baseUrl + "/games?key=" + apiKey);
+            
+            if (page != null && page > 0) {
+                url.append("&page=").append(page);
+            }
+            
+            if (search != null && !search.isBlank()) {
+                url.append("&search=").append(search);
+                url.append("&search_exact=true");
+            }
+            
+            url.append("&page_size=20");
+            url.append("&ordering=-rating");
+            
+            RawgResponse response = restTemplate.getForObject(url.toString(), RawgResponse.class);
+            return response != null ? response : new RawgResponse();
+        } catch (RestClientException e) {
+            System.err.println("Errore nella chiamata a RAWG API: " + e.getMessage());
+            return new RawgResponse();
+        }
+    }
 
-        String url = "https://api.rawg.io/api/games?key=" + API_KEY;
-
-        return restTemplate.getForObject(url, String.class);
+    public List<RawgGame> getAllGames(Integer page) {
+        try {
+            String url = baseUrl + "/games?key=" + apiKey + "&page=" + (page != null ? page : 1) + "&page_size=20&ordering=-rating";
+            RawgResponse response = restTemplate.getForObject(url, RawgResponse.class);
+            return response != null && response.getResults() != null ? response.getResults() : List.of();
+        } catch (RestClientException e) {
+            System.err.println("Errore nella chiamata a RAWG API: " + e.getMessage());
+            return List.of();
+        }
     }
 
     public Optional<Videogioco> update(UUID id, VideogiocoForm form) {
