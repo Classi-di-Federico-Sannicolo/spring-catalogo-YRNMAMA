@@ -2,11 +2,11 @@
 
 Un'applicazione web completa per la gestione di un catalogo videogiochi, con integrazione API RAWG e operazioni CRUD complete.
 
-## 📄 Documentazione e Relazione Tecnica
+## Documentazione e Relazione Tecnica
 
 La relazione tecnica di accompagnamento all'esame (scelte progettuali, test eseguiti e criteri di accettazione per le Task 1–4) è disponibile in [`docs/relazione-tecnica.md`](docs/relazione-tecnica.md).
 
-##  Descrizione
+## Descrizione
 
 Questa applicazione Spring Boot permette di:
 - **Gestire un catalogo locale** di videogiochi con operazioni CRUD complete
@@ -27,7 +27,7 @@ Questa applicazione Spring Boot permette di:
 - **Docker** - Containerizzazione database e stack di osservabilità
 - **Maven** - Gestione dipendenze
 
-## 🚀 Avvio Rapido
+## Avvio Rapido
 
 ### Prerequisiti
 - Java 21 o superiore
@@ -56,7 +56,7 @@ SPRING_PROFILES_ACTIVE=prod ./mvnw spring-boot:run
 - **Prometheus**: http://localhost:9090
 - **Grafana**: http://localhost:3000
 
-## 📈 Monitoraggio e Alerting
+## Monitoraggio e Alerting
 
 Il progetto espone metriche JVM e HTTP tramite Spring Boot Actuator, esportate in Prometheus.
 
@@ -64,7 +64,7 @@ Il progetto espone metriche JVM e HTTP tramite Spring Boot Actuator, esportate i
 - Dashboard Grafana pre-configurate per JVM e alerting
 - Regola di alert: `High500Errors` su spike di errori HTTP 500
 
-## 🧪 Verifica automatica
+## Verifica automatica
 
 Per verificare il comportamento atteso del backend in ambiente test, esegui:
 
@@ -74,7 +74,7 @@ JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64 ./mvnw -Dspring.profiles.active=tes
 
 La suite include test del controller REST, del service e il bootstrapping dell'applicazione.
 
-## 📁 Struttura del Progetto
+## Struttura del Progetto
 
 ```
 src/main/java/itt/marconi/videogiochi/
@@ -104,7 +104,7 @@ src/main/resources/
 └── application.properties          # Configurazioni app
 ```
 
-## 🌐 API REST
+## API REST
 
 ### API RAWG (Dati Esterni)
 
@@ -210,7 +210,7 @@ DELETE /api/catalogo
 curl -X DELETE http://localhost:8080/api/catalogo
 ```
 
-## 🖥️ Interfaccia Web
+## Interfaccia Web
 
 ### Pagine Disponibili
 
@@ -243,7 +243,7 @@ curl -X DELETE http://localhost:8080/api/catalogo
   - Modifica e salvataggio
   - Validazione campi
 
-## 🔧 Configurazione
+## Configurazione
 
 ### Database
 Il database MySQL è configurato via Docker Compose:
@@ -261,7 +261,7 @@ Il database MySQL è configurato via Docker Compose:
 - **Contesto**: `/`
 - **Database**: Auto-configurato con JPA
 
-## 📊 Esempi di Utilizzo
+## Esempi di Utilizzo
 
 ### 1. Gestione Catalogo via API
 ```bash
@@ -287,7 +287,7 @@ curl http://localhost:8080/api/giochi | jq '.results[0:3]'
 4. Visualizza i dettagli del videogioco creato
 5. Modifica o elimina come necessario
 
-## 🐛 Risoluzione Problemi
+## Risoluzione Problemi
 
 ### Porta 8080 già in uso
 ```bash

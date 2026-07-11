@@ -97,19 +97,19 @@ Risultato: **BUILD SUCCESS — Tests run: 6, Failures: 0, Errors: 0** (`Videogio
 
 | Criterio | Stato |
 |----------|-------|
-| Task 1 completa e corretta (sufficienza) | ✅ |
-| Risposte sempre standardizzate (`ApiResponse`) | ✅ |
-| Errori centralizzati via `@RestControllerAdvice` | ✅ |
-| 400 + mappa errori per validazione | ✅ |
-| Nessun `try-catch` nei controller per formattazione | ✅ |
-| Dockerfile multi-stage (build / JRE-alpine) | ✅ |
-| Profili `dev` (TRACE+SQL) / `prod` (INFO+file rotante) | ✅ |
-| Actuator + Micrometer Prometheus | ✅ |
-| Prometheus + Grafana in compose | ✅ |
-| Alert su errori 500 > 10 | ✅ |
-| Test controller (`@WebMvcTest` + `jsonPath`) | ✅ |
-| Test service (`MockitoExtension` + `verify`/`argThat`, azzeramento ID) | ✅ |
-| Relazione in `docs/` collegata al README | ✅ |
+| Task 1 completa e corretta (sufficienza) |  |
+| Risposte sempre standardizzate (`ApiResponse`) |  |
+| Errori centralizzati via `@RestControllerAdvice` |  |
+| 400 + mappa errori per validazione |  |
+| Nessun `try-catch` nei controller per formattazione |  |
+| Dockerfile multi-stage (build / JRE-alpine) |  |
+| Profili `dev` (TRACE+SQL) / `prod` (INFO+file rotante) |  |
+| Actuator + Micrometer Prometheus |  |
+| Prometheus + Grafana in compose |  |
+| Alert su errori 500 > 10 |  |
+| Test controller (`@WebMvcTest` + `jsonPath`) |  |
+| Test service (`MockitoExtension` + `verify`/`argThat`, azzeramento ID) |  |
+| Relazione in `docs/` collegata al README |  |
 
 ---
 
