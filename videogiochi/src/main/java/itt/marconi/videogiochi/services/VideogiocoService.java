@@ -12,6 +12,7 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import itt.marconi.videogiochi.domain.Videogioco;
+import itt.marconi.videogiochi.domain.VideogiocoDto;
 import itt.marconi.videogiochi.domain.VideogiocoForm;
 import itt.marconi.videogiochi.domain.RawgGame;
 import itt.marconi.videogiochi.domain.RawgResponse;
@@ -34,7 +35,12 @@ public class VideogiocoService {
     private String baseUrl;
 
     public Videogioco save(VideogiocoForm videogiocoForm) {
+        if (videogiocoForm == null) {
+            throw new IllegalArgumentException("VideogiocoForm non può essere nullo");
+        }
+
         Videogioco v = mapVideogioco(videogiocoForm);
+        v.setId(null);
         return videogiocoRepo.save(v);
     }
 
@@ -45,6 +51,14 @@ public class VideogiocoService {
         v.setGenere(form.getGenere());
         v.setAnno(form.getAnno());
         return v;
+    }
+
+    public VideogiocoDto toDto(Videogioco v) {
+        return new VideogiocoDto(v.getId(), v.getTitolo(), v.getProduttore(), v.getGenere(), v.getAnno());
+    }
+
+    public List<VideogiocoDto> toDtoList(List<Videogioco> videogiochi) {
+        return videogiochi.stream().map(this::toDto).toList();
     }
 
     public List<Videogioco> findAll(String search) {
@@ -102,6 +116,10 @@ public class VideogiocoService {
     }
 
     public Optional<Videogioco> update(UUID id, VideogiocoForm form) {
+        if (form == null) {
+            throw new IllegalArgumentException("VideogiocoForm non può essere nullo");
+        }
+
         Optional<Videogioco> existing = videogiocoRepo.findById(id);
         if (existing.isPresent()) {
             Videogioco v = existing.get();
