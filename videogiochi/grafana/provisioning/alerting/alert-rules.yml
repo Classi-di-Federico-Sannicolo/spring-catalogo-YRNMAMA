@@ -1,0 +1,11 @@
+groups:
+  - name: spring-videogiochi-alerts
+    rules:
+      - alert: High500Errors
+        expr: rate(http_server_requests_seconds_count{status="500"}[5m]) > 10
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Troppe richieste 500"
+          description: "Il numero di richieste HTTP con status 500 è superiore al limite di tolleranza."
