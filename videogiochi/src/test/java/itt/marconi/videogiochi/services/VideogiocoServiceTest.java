@@ -1,5 +1,6 @@
 package itt.marconi.videogiochi.services;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -39,5 +40,10 @@ class VideogiocoServiceTest {
             "Platform".equals(v.getGenere()) &&
             Integer.valueOf(1985).equals(v.getAnno())
         ));
+    }
+
+    @Test
+    void saveShouldRejectNullForm() {
+        assertThrows(IllegalArgumentException.class, () -> service.save(null));
     }
 }
