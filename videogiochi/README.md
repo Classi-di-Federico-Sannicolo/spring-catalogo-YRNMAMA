@@ -2,6 +2,10 @@
 
 Un'applicazione web completa per la gestione di un catalogo videogiochi, con integrazione API RAWG e operazioni CRUD complete.
 
+## 📄 Documentazione e Relazione Tecnica
+
+La relazione tecnica di accompagnamento all'esame (scelte progettuali, test eseguiti e criteri di accettazione per le Task 1–4) è disponibile in [`docs/relazione-tecnica.md`](docs/relazione-tecnica.md).
+
 ##  Descrizione
 
 Questa applicazione Spring Boot permette di:
