@@ -35,6 +35,10 @@ public class VideogiocoService {
     private String baseUrl;
 
     public Videogioco save(VideogiocoForm videogiocoForm) {
+        if (videogiocoForm == null) {
+            throw new IllegalArgumentException("VideogiocoForm non può essere nullo");
+        }
+
         Videogioco v = mapVideogioco(videogiocoForm);
         v.setId(null);
         return videogiocoRepo.save(v);
@@ -112,6 +116,10 @@ public class VideogiocoService {
     }
 
     public Optional<Videogioco> update(UUID id, VideogiocoForm form) {
+        if (form == null) {
+            throw new IllegalArgumentException("VideogiocoForm non può essere nullo");
+        }
+
         Optional<Videogioco> existing = videogiocoRepo.findById(id);
         if (existing.isPresent()) {
             Videogioco v = existing.get();
