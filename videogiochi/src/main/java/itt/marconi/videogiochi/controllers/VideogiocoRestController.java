@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,11 +16,14 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
-import itt.marconi.videogiochi.domain.Videogioco;
-import itt.marconi.videogiochi.domain.VideogiocoForm;
+import itt.marconi.videogiochi.api.ApiResponse;
 import itt.marconi.videogiochi.domain.RawgGame;
 import itt.marconi.videogiochi.domain.RawgResponse;
+import itt.marconi.videogiochi.domain.Videogioco;
+import itt.marconi.videogiochi.domain.VideogiocoDto;
+import itt.marconi.videogiochi.domain.VideogiocoForm;
 import itt.marconi.videogiochi.services.VideogiocoService;
 
 @RestController
@@ -28,90 +32,58 @@ public class VideogiocoRestController {
     @Autowired
     private VideogiocoService service;
 
-    // ======= API RAWG (Videogiochi Reali) =======
-    
-    // Ricerca videogiochi su RAWG API
     @GetMapping("/api/giochi")
-    public ResponseEntity<RawgResponse> searchGiochi(
+    public ResponseEntity<ApiResponse<RawgResponse>> searchGiochi(
             @RequestParam(required = false) String search,
             @RequestParam(required = false) Integer page) {
-        try {
-            RawgResponse response = service.searchGames(search, page != null ? page : 1);
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        RawgResponse response = service.searchGames(search, page != null ? page : 1);
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
 
-    // Ottieni tutti i videogiochi con paginazione
     @GetMapping("/api/giochi/tutti")
-    public ResponseEntity<List<RawgGame>> getTuttiGiochi(
+    public ResponseEntity<ApiResponse<List<RawgGame>>> getTuttiGiochi(
             @RequestParam(required = false, defaultValue = "1") Integer page) {
-        try {
-            List<RawgGame> games = service.getAllGames(page);
-            return ResponseEntity.ok(games);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        List<RawgGame> games = service.getAllGames(page);
+        return ResponseEntity.ok(ApiResponse.success(games));
     }
 
-    // ======= CRUD CATALOGO LOCALE =======
-
-    // CREATE - Crea nuovo videogioco
     @PostMapping("/api/catalogo")
-    public ResponseEntity<Videogioco> createVideogioco(@RequestBody VideogiocoForm form) {
-        try {
-            Videogioco videogioco = service.save(form);
-            return ResponseEntity.status(HttpStatus.CREATED).body(videogioco);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+    public ResponseEntity<ApiResponse<VideogiocoDto>> createVideogioco(@Validated @RequestBody VideogiocoForm form) {
+        Videogioco videogioco = service.save(form);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(service.toDto(videogioco)));
     }
 
-    // READ - Lista tutti i videogiochi con ricerca opzionale
     @GetMapping("/api/catalogo")
-    public List<Videogioco> getCatalogo(@RequestParam(required = false) String search) {
-        return service.findAll(search);
+    public ResponseEntity<ApiResponse<List<VideogiocoDto>>> getCatalogo(@RequestParam(required = false) String search) {
+        return ResponseEntity.ok(ApiResponse.success(service.toDtoList(service.findAll(search))));
     }
 
-    // READ - Ottieni videogioco per ID
     @GetMapping("/api/catalogo/{id}")
-    public ResponseEntity<Videogioco> getVideogioco(@PathVariable UUID id) {
-        Optional<Videogioco> videogioco = service.get(id);
-        if (videogioco.isPresent()) {
-            return ResponseEntity.ok(videogioco.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<ApiResponse<VideogiocoDto>> getVideogioco(@PathVariable UUID id) {
+        return service.get(id)
+            .map(v -> ResponseEntity.ok(ApiResponse.success(service.toDto(v))))
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Videogioco non trovato"));
     }
 
-    // UPDATE - Aggiorna videogioco esistente
     @PutMapping("/api/catalogo/{id}")
-    public ResponseEntity<Videogioco> updateVideogioco(@PathVariable UUID id, @RequestBody VideogiocoForm form) {
-        Optional<Videogioco> updated = service.update(id, form);
-        if (updated.isPresent()) {
-            return ResponseEntity.ok(updated.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<ApiResponse<VideogiocoDto>> updateVideogioco(@PathVariable UUID id, @Validated @RequestBody VideogiocoForm form) {
+        return service.update(id, form)
+            .map(v -> ResponseEntity.ok(ApiResponse.success(service.toDto(v))))
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Videogioco non trovato"));
     }
 
-    // DELETE - Elimina videogioco per ID
     @DeleteMapping("/api/catalogo/{id}")
-    public ResponseEntity<Void> deleteVideogioco(@PathVariable UUID id) {
-        Optional<Videogioco> videogioco = service.get(id);
-        if (videogioco.isPresent()) {
-            service.deleteById(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<ApiResponse<Void>> deleteVideogioco(@PathVariable UUID id) {
+        if (service.get(id).isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Videogioco non trovato");
         }
+        service.deleteById(id);
+        return ResponseEntity.ok(ApiResponse.success(null, "Videogioco eliminato"));
     }
 
-    // DELETE - Svuota tutto il catalogo
     @DeleteMapping("/api/catalogo")
-    public ResponseEntity<Void> clearCatalogo() {
+    public ResponseEntity<ApiResponse<Void>> clearCatalogo() {
         service.deleteAll();
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(ApiResponse.success(null, "Catalogo svuotato"));
     }
 }

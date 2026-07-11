@@ -1,6 +1,6 @@
 package itt.marconi.videogiochi.controllers;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -12,16 +12,20 @@ import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import itt.marconi.videogiochi.api.GlobalExceptionHandler;
 import itt.marconi.videogiochi.domain.Videogioco;
+import itt.marconi.videogiochi.domain.VideogiocoDto;
 import itt.marconi.videogiochi.services.VideogiocoService;
 
 @WebMvcTest(VideogiocoRestController.class)
-@Import(itt.marconi.videogiochi.api.GlobalExceptionHandler.class)
+@Import(GlobalExceptionHandler.class)
+@ActiveProfiles("test")
 class VideogiocoRestControllerWebMvcTest {
 
     @Autowired
@@ -40,7 +44,10 @@ class VideogiocoRestControllerWebMvcTest {
             1985
         );
 
-        when(service.findAll(any())).thenReturn(List.of(videogioco));
+        when(service.findAll(isNull())).thenReturn(List.of(videogioco));
+        when(service.toDtoList(List.of(videogioco))).thenReturn(List.of(
+            new VideogiocoDto(videogioco.getId(), videogioco.getTitolo(), videogioco.getProduttore(), videogioco.getGenere(), videogioco.getAnno())
+        ));
 
         mockMvc.perform(get("/api/catalogo"))
             .andExpect(status().isOk())

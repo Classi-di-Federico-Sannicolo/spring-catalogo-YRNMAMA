@@ -12,6 +12,7 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import itt.marconi.videogiochi.domain.Videogioco;
+import itt.marconi.videogiochi.domain.VideogiocoDto;
 import itt.marconi.videogiochi.domain.VideogiocoForm;
 import itt.marconi.videogiochi.domain.RawgGame;
 import itt.marconi.videogiochi.domain.RawgResponse;
@@ -35,6 +36,7 @@ public class VideogiocoService {
 
     public Videogioco save(VideogiocoForm videogiocoForm) {
         Videogioco v = mapVideogioco(videogiocoForm);
+        v.setId(null);
         return videogiocoRepo.save(v);
     }
 
@@ -45,6 +47,14 @@ public class VideogiocoService {
         v.setGenere(form.getGenere());
         v.setAnno(form.getAnno());
         return v;
+    }
+
+    public VideogiocoDto toDto(Videogioco v) {
+        return new VideogiocoDto(v.getId(), v.getTitolo(), v.getProduttore(), v.getGenere(), v.getAnno());
+    }
+
+    public List<VideogiocoDto> toDtoList(List<Videogioco> videogiochi) {
+        return videogiochi.stream().map(this::toDto).toList();
     }
 
     public List<Videogioco> findAll(String search) {
