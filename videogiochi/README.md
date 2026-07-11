@@ -18,7 +18,9 @@ Questa applicazione Spring Boot permette di:
 - **MySQL** - Database relazionale
 - **Thymeleaf** - Template engine per interfaccia web
 - **RestTemplate** - Client HTTP per chiamate API esterne
-- **Docker** - Containerizzazione database
+- **Actuator + Micrometer Prometheus** - health check e metriche runtime
+- **Grafana** - dashboard e alerting operativi
+- **Docker** - Containerizzazione database e stack di osservabilità
 - **Maven** - Gestione dipendenze
 
 ## 🚀 Avvio Rapido
@@ -28,20 +30,45 @@ Questa applicazione Spring Boot permette di:
 - Docker e Docker Compose
 - Maven (opzionale, usa gli wrapper inclusi)
 
-### 1. Avvia il Database
+### 1. Avvia il stack completo
 ```bash
 cd videogiochi
 docker-compose up -d
 ```
+Questo avvia il database MySQL, il backend Spring Boot e i servizi di monitoraggio Prometheus/Grafana.
 
-### 2. Avvia l'Applicazione
+### 2. Avvia l'Applicazione con profilo
 ```bash
-./mvnw spring-boot:run
+# sviluppo
+SPRING_PROFILES_ACTIVE=dev ./mvnw spring-boot:run
+
+# produzione
+SPRING_PROFILES_ACTIVE=prod ./mvnw spring-boot:run
 ```
 
 ### 3. Accedi all'Applicazione
 - **Interfaccia Web**: http://localhost:8080
 - **API Base**: http://localhost:8080/api
+- **Prometheus**: http://localhost:9090
+- **Grafana**: http://localhost:3000
+
+## 📈 Monitoraggio e Alerting
+
+Il progetto espone metriche JVM e HTTP tramite Spring Boot Actuator, esportate in Prometheus.
+
+- Endpoint Prometheus: `/actuator/prometheus`
+- Dashboard Grafana pre-configurate per JVM e alerting
+- Regola di alert: `High500Errors` su spike di errori HTTP 500
+
+## 🧪 Verifica automatica
+
+Per verificare il comportamento atteso del backend in ambiente test, esegui:
+
+```bash
+JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64 ./mvnw -Dspring.profiles.active=test test
+```
+
+La suite include test del controller REST, del service e il bootstrapping dell'applicazione.
 
 ## 📁 Struttura del Progetto
 
